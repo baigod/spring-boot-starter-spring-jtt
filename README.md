@@ -19,10 +19,10 @@ public class Application {
 
 
 
-#####本项目的parent，可以自行修改，本人使用的是上层pom是
+本项目的parent，可以自行修改，本人使用的是上层pom是
 ```java
 <parent>
-    <groupId>org.springframework.boot</groupId>
+	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-starter-parent</artifactId>
 	<version>1.5.6.RELEASE</version>
 </parent>
