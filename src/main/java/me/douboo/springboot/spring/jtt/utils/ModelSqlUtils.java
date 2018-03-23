@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.util.StringUtils;
 
 import me.douboo.springboot.spring.jtt.annotation.NameColumn;
@@ -30,6 +31,8 @@ import me.douboo.springboot.spring.jtt.model.SqlParamsPairs;
  */
 public class ModelSqlUtils {
 
+	private static DatabaseDriver driver = DatabaseDriver.MYSQL;
+	private static String quotes = "`";
 	private static Logger logger = LoggerFactory.getLogger(ModelSqlUtils.class);
 
 	/**
@@ -92,7 +95,7 @@ public class ModelSqlUtils {
 			if (count != 0) {
 				insertSql.append(",");
 			}
-			insertSql.append("`").append(columnName).append("`");
+			insertSql.append(quotes).append(columnName).append(quotes);
 
 			if (count != 0) {
 				paramsSql.append(",");
@@ -195,8 +198,7 @@ public class ModelSqlUtils {
 			Object value = getter.invoke(po);
 			/*
 			 * if (value == null) { //
-			 * 如果参数值是null就直接跳过（不允许覆盖为null值，规范要求更新的每个字段都要有值，没有值就是空字符串） continue;
-			 * }
+			 * 如果参数值是null就直接跳过（不允许覆盖为null值，规范要求更新的每个字段都要有值，没有值就是空字符串） continue; }
 			 */
 
 			Transient tranAnno = getter.getAnnotation(Transient.class);
@@ -408,8 +410,7 @@ public class ModelSqlUtils {
 	 * @throws @throws
 	 *             Exception
 	 */
-	public static <T> SqlParamsPairs getGetFromObject(Class<T> clazz, Object id)
-			throws NoIdAnnotationFoundException, NoColumnAnnotationFoundException {
+	public static <T> SqlParamsPairs getGetFromObject(Class<T> clazz, Object id) throws NoIdAnnotationFoundException, NoColumnAnnotationFoundException {
 
 		// 用来存放get语句
 		StringBuffer getSql = new StringBuffer();
@@ -459,8 +460,8 @@ public class ModelSqlUtils {
 	}
 
 	/**
-	 * use getter to guess column name, if there is annotation then use
-	 * annotation value, if not then guess from field name
+	 * use getter to guess column name, if there is annotation then use annotation
+	 * value, if not then guess from field name
 	 * 
 	 * @param getter
 	 * @param clazz
@@ -499,14 +500,20 @@ public class ModelSqlUtils {
 					} else if (Naming.UNDERLINE == naming) {
 						columnName = CamelNameUtils.camel2underscore(columnName);
 					}
-				}else{
-					//默认使用下划线写法
+				} else {
+					// 默认使用下划线写法
 					columnName = CamelNameUtils.camel2underscore(columnName);
 				}
 			}
 
 		}
 		return columnName;
+	}
+
+	public static void setDriver(DatabaseDriver driver) {
+		if (driver == DatabaseDriver.SQLSERVER) {
+			quotes = "";
+		}
 	}
 
 }
