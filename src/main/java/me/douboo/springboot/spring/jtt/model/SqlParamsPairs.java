@@ -1,18 +1,16 @@
 package me.douboo.springboot.spring.jtt.model;
 
-import java.util.Arrays;
-
 public class SqlParamsPairs {
-	
+
 	private String sql;
-	
+
 	private Object[] params;
-	
-	public SqlParamsPairs(){
-		
+
+	public SqlParamsPairs() {
+
 	}
-	
-	public SqlParamsPairs(String sql,Object[] params){
+
+	public SqlParamsPairs(String sql, Object[] params) {
 		this.sql = sql;
 		this.params = params;
 	}
@@ -35,8 +33,21 @@ public class SqlParamsPairs {
 
 	@Override
 	public String toString() {
-		return "SqlParamsPairs [sql=" + sql + ", params="
-				+ Arrays.toString(params) + "]";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for (int i = 0; i < params.length; i++) {
+			Object p = params[i];
+			if (p instanceof String) {
+				sb.append("'").append(p).append("'");
+			} else {
+				sb.append(p);
+			}
+			if (i < params.length - 1) {
+				sb.append(" , ");
+			}
+		}
+		sb.append("]");
+		return "SqlParamsPairs [sql=" + sql + ", params=" + sb + "]";
 	}
-	
+
 }

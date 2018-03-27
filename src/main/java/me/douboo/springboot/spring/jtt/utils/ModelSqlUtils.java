@@ -31,7 +31,6 @@ import me.douboo.springboot.spring.jtt.model.SqlParamsPairs;
  */
 public class ModelSqlUtils {
 
-	private static DatabaseDriver driver = DatabaseDriver.MYSQL;
 	private static String quotes = "`";
 	private static Logger logger = LoggerFactory.getLogger(ModelSqlUtils.class);
 
@@ -111,7 +110,6 @@ public class ModelSqlUtils {
 
 		SqlParamsPairs sqlAndParams = new SqlParamsPairs(insertSql.toString(), params.toArray());
 		logger.debug(sqlAndParams.toString());
-
 		return sqlAndParams;
 
 	}

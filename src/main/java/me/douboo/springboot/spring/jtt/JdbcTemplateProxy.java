@@ -2,6 +2,7 @@ package me.douboo.springboot.spring.jtt;
 
 import static me.douboo.springboot.spring.jtt.utils.CatalogUtils.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +46,16 @@ public class JdbcTemplateProxy {
 		} catch (DataAccessException e) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
-			for (Object p : params) {
-				sb.append(p + " | ");
+			for (int i = 0; i < params.length; i++) {
+				Object p = params[i];
+				if (p instanceof String || p instanceof Date) {
+					sb.append("'").append(p).append("'");
+				} else {
+					sb.append(p);
+				}
+				if (i < params.length - 1) {
+					sb.append(" , ");
+				}
 			}
 			sb.append("]");
 			logger.error("Error SQL: " + sql + " Params: " + sb.toString());
@@ -144,7 +153,7 @@ public class JdbcTemplateProxy {
 			sb.append("[");
 			for (int i = 0; i < params.length; i++) {
 				Object p = params[i];
-				if (p instanceof String) {
+				if (p instanceof String || p instanceof Date) {
 					sb.append("'").append(p).append("'");
 				} else {
 					sb.append(p);
