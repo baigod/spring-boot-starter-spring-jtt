@@ -1,6 +1,6 @@
 package me.douboo.springboot.spring.jtt.exception;
 
-public class NoDefinedGetterException extends Exception {
+public class NoDefinedGetterException extends RuntimeException {
 
 	private static final long serialVersionUID = -1213525052763444089L;
 	private String fieldName;

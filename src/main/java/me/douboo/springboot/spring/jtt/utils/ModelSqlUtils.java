@@ -1,6 +1,7 @@
 package me.douboo.springboot.spring.jtt.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import me.douboo.springboot.spring.jtt.annotation.NameColumn;
 import me.douboo.springboot.spring.jtt.annotation.Naming;
+import me.douboo.springboot.spring.jtt.exception.MethodInvokeException;
 import me.douboo.springboot.spring.jtt.exception.NoColumnAnnotationFoundException;
 import me.douboo.springboot.spring.jtt.exception.NoDefinedGetterException;
 import me.douboo.springboot.spring.jtt.exception.NoIdAnnotationFoundException;
@@ -42,7 +44,7 @@ public class ModelSqlUtils {
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 */
-	public static <T> SqlParamsPairs getInsertFromObject(T po) throws Exception {
+	public static <T> SqlParamsPairs getInsertFromObject(T po) {
 
 		// 用来存放insert语句
 		StringBuffer insertSql = new StringBuffer();
@@ -76,7 +78,12 @@ public class ModelSqlUtils {
 				continue;
 			}
 
-			Object value = getter.invoke(po);
+			Object value;
+			try {
+				value = getter.invoke(po);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new MethodInvokeException(po.getClass().getName(), getter);
+			}
 			if (value == null) {
 				// 如果参数值是null就直接跳过（不允许覆盖为null值，规范要求更新的每个字段都要有值，没有值就是空字符串）
 				continue;
@@ -159,7 +166,7 @@ public class ModelSqlUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlParamsPairs getUpdateFromObject(Object po) throws Exception {
+	public static SqlParamsPairs getUpdateFromObject(Object po) {
 
 		// 用来存放insert语句
 		StringBuffer updateSql = new StringBuffer();
@@ -193,7 +200,12 @@ public class ModelSqlUtils {
 				continue;
 			}
 
-			Object value = getter.invoke(po);
+			Object value;
+			try {
+				value = getter.invoke(po);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new MethodInvokeException(po.getClass().getName(), getter);
+			}
 			/*
 			 * if (value == null) { //
 			 * 如果参数值是null就直接跳过（不允许覆盖为null值，规范要求更新的每个字段都要有值，没有值就是空字符串） continue; }
@@ -248,7 +260,7 @@ public class ModelSqlUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlParamsPairs getMergeFromObject(Object po, String[] cols) throws Exception {
+	public static SqlParamsPairs getMergeFromObject(Object po, String[] cols) {
 
 		// 用来存放insert语句
 		StringBuffer updateSql = new StringBuffer();
@@ -282,7 +294,12 @@ public class ModelSqlUtils {
 				continue;
 			}
 
-			Object value = getter.invoke(po);
+			Object value;
+			try {
+				value = getter.invoke(po);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new MethodInvokeException(po.getClass().getName(), getter);
+			}
 			if (value == null) {
 				// 如果参数值是null就直接跳过（不允许覆盖为null值，规范要求更新的每个字段都要有值，没有值就是空字符串）
 				continue;
@@ -338,7 +355,7 @@ public class ModelSqlUtils {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static SqlParamsPairs getDeleteFromObject(Object po) throws Exception {
+	public static SqlParamsPairs getDeleteFromObject(Object po) {
 
 		// 用来存放insert语句
 		StringBuffer deleteSql = new StringBuffer();
@@ -379,7 +396,11 @@ public class ModelSqlUtils {
 
 			deleteSql.append(columnName + " = ?");
 
-			idValue = getter.invoke(po, new Object[] {});
+			try {
+				idValue = getter.invoke(po, new Object[] {});
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new MethodInvokeException(po.getClass().getName(), getter);
+			}
 
 			break;
 		}
@@ -408,7 +429,8 @@ public class ModelSqlUtils {
 	 * @throws @throws
 	 *             Exception
 	 */
-	public static <T> SqlParamsPairs getGetFromObject(Class<T> clazz, Object id) throws NoIdAnnotationFoundException, NoColumnAnnotationFoundException {
+	public static <T> SqlParamsPairs getGetFromObject(Class<T> clazz, Object id)
+			throws NoIdAnnotationFoundException, NoColumnAnnotationFoundException {
 
 		// 用来存放get语句
 		StringBuffer getSql = new StringBuffer();

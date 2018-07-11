@@ -1,6 +1,6 @@
 package me.douboo.springboot.spring.jtt.exception;
 
-public class NoIdAnnotationFoundException extends Exception {
+public class NoIdAnnotationFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = -1295140057846546387L;
 

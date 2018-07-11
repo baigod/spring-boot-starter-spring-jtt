@@ -2,7 +2,7 @@ package me.douboo.springboot.spring.jtt.exception;
 
 import java.lang.reflect.Method;
 
-public class NoColumnAnnotationFoundException extends Exception {
+public class NoColumnAnnotationFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = -2538732748536433343L;
 
