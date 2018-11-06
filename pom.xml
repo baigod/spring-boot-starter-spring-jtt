@@ -13,7 +13,7 @@
 
 	<groupId>me.douboo.springboot</groupId>
 	<artifactId>spring-boot-starter-spring-jtt</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>spring-boot-starter-spring-jtt</name>
@@ -157,5 +157,10 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 	</dependencies>
 </project>
