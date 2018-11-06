@@ -44,7 +44,7 @@ public class ModelSqlUtils {
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
 	 */
-	public static <T> SqlParamsPairs getInsertFromObject(T po) {
+	public static <T> SqlParamsPairs getInsertFromObject(T po, String tableName) {
 
 		// 用来存放insert语句
 		StringBuffer insertSql = new StringBuffer();
@@ -54,8 +54,10 @@ public class ModelSqlUtils {
 		// 用来存放参数值
 		List<Object> params = new ArrayList<Object>();
 
-		// 分析表名
-		String tableName = getTableName(po.getClass());
+		if (StringUtils.isEmpty(tableName)) {
+			// 分析表名
+			tableName = getTableName(po.getClass());
+		}
 
 		insertSql.append("insert into " + tableName + " (");
 
@@ -429,8 +431,7 @@ public class ModelSqlUtils {
 	 * @throws @throws
 	 *             Exception
 	 */
-	public static <T> SqlParamsPairs getGetFromObject(Class<T> clazz, Object id)
-			throws NoIdAnnotationFoundException, NoColumnAnnotationFoundException {
+	public static <T> SqlParamsPairs getGetFromObject(Class<T> clazz, Object id) throws NoIdAnnotationFoundException, NoColumnAnnotationFoundException {
 
 		// 用来存放get语句
 		StringBuffer getSql = new StringBuffer();
